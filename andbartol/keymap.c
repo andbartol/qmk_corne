@@ -3,7 +3,6 @@
 #include "process_vim.h"
 #include "autoclose.h"
 #include "poweraccent.h"
-// #include "alttab.h"
 
 #ifndef PASSWD
 #define PASSWD ""
@@ -204,11 +203,6 @@ process_record_user(uint16_t keycode, keyrecord_t *record) {
     return false;
   }
 #endif
-// #ifdef MASTER_LEFT
-//   else if (!process_alttab(keycode, record)) {
-//     return false;
-//   }
-// #endif
 
   return true;
 }
