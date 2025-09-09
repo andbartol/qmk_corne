@@ -38,7 +38,7 @@ enum {
 #define KC_VESC KC_ESC
 // #define KC_VESC TD(TD_VESC) // vim mode
 
-#ifdef MASTER_LEFT
+#ifdef WINDOWS_CONF
 #define KC_CLSE LALT(KC_F4)
 #define KC_LOCK KC_L
 #else
@@ -198,7 +198,7 @@ process_record_user(uint16_t keycode, keyrecord_t *record) {
   } else if (!process_autoclose(keycode, record)) {
     return false;
   }
-#ifdef MASTER_RIGHT
+#ifndef WINDOWS_CONF
   else if (!process_poweraccent(keycode, record)) {
     return false;
   }

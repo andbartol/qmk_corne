@@ -24,8 +24,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Select hand configuration */
 
-//#define MASTER_LEFT
-#define MASTER_RIGHT
+#define MASTER_LEFT
+//#define MASTER_RIGHT
+
+
+#ifdef MASTER_LEFT
+#define WINDOWS_CONF
+#endif
+
+#ifdef WINDOWS_CONF
+#define DOUBLE_REPORT
+#endif
 
 //#define QUICK_TAP_TERM 0
 //#define TAPPING_TERM 100
