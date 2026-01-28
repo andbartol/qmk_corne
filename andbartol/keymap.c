@@ -115,13 +115,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MOUS] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_ALTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_WH_U, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSPC,
+      KC_ALTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      MS_WHLU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, XXXXXXX, KC_PGUP,
+      KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      MS_LEFT, MS_DOWN,   MS_UP, MS_RGHT, XXXXXXX, KC_PGUP,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, _______, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX,                      KC_WH_D, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGDN,
+      KC_LSFT, _______, MS_ACL0, MS_ACL1, MS_ACL2, XXXXXXX,                      MS_WHLD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGDN,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,     KC_BTN1, KC_BTN2, KC_LALT
+                                          KC_LGUI, _______,  KC_SPC,     MS_BTN1, MS_BTN2, KC_LALT
                                       //`-----------------------------'  `--------------------------'
   ),
 
