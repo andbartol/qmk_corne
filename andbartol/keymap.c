@@ -163,6 +163,24 @@ press_button(uint16_t keycode, keyrecord_t *record) {
 bool cpd_pressed = false;
 bool cpu_pressed = false;
 
+static bool
+process_ctrl_mapped_key(uint16_t keycode, uint16_t expected_keycode,
+                        uint16_t target_keycode, bool *flag,
+                        keyrecord_t *record, bool ctrl_pressed) {
+    if (keycode != expected_keycode) return true;
+    if (ctrl_pressed) {
+        *flag = record->event.pressed;
+        press_button(target_keycode, record);
+        return false;
+    }
+    if (!record->event.pressed && *flag) {
+        *flag = false;
+        press_button(target_keycode, record);
+        return false;
+    }
+    return true;
+}
+
 bool
 process_record_user(uint16_t keycode, keyrecord_t *record) {
 
@@ -179,21 +197,9 @@ process_record_user(uint16_t keycode, keyrecord_t *record) {
   } else if (KC_BSPC == keycode && ctrl_pressed && alt_pressed) {
     press_button(KC_DEL, record);
     return false;
-  } else if (KC_QUOT == keycode && ctrl_pressed) {
-    if (record->event.pressed) cpu_pressed = true;
-    press_button(KC_PGUP, record);
+  } else if (!process_ctrl_mapped_key(keycode, KC_QUOT, KC_PGUP, &cpu_pressed, record, ctrl_pressed)) {
     return false;
-  } else if (KC_QUOT == keycode && !record->event.pressed && cpu_pressed) { // TODO: Estrarre questa logica contorta in un modulo
-    cpu_pressed = false;
-    press_button(KC_PGUP, record);
-    return false;
-  } else if (KC_VESC == keycode && ctrl_pressed) {
-    if (record->event.pressed) cpd_pressed = true;
-    press_button(KC_PGDN, record);
-    return false;
-  } else if (KC_VESC == keycode && !record->event.pressed && cpd_pressed) {
-    cpd_pressed = false;
-    press_button(KC_PGDN, record);
+  } else if (!process_ctrl_mapped_key(keycode, KC_VESC, KC_PGDN, &cpd_pressed, record, ctrl_pressed)) {
     return false;
   } else if (!process_autoclose(keycode, record)) {
     return false;
