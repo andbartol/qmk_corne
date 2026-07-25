@@ -1,50 +1,57 @@
-uint16_t open_timer = 0;
-uint16_t start_keycode = 0;
+static uint16_t autoclose_timer  = 0;
+static uint16_t opening_keycode  = KC_NO;
 
-bool
-process_autoclose(uint16_t keycode, keyrecord_t *record) {
-	if (!record->event.pressed) return true;
+static void reset_autoclose(void) {
+    autoclose_timer = 0;
+    opening_keycode = KC_NO;
+}
 
-	if (KC_LCBR == keycode) {
-		open_timer = timer_read();
-		start_keycode = keycode;
-	} else if (KC_RCBR == keycode && KC_LCBR == start_keycode) {
-		if (timer_elapsed(open_timer) < AUTOCLOSE_TERM) {
-			SEND_STRING("}" SS_TAP(X_LEFT));
-			open_timer = 0;
-			start_keycode = 0;
-			return false;
-		} else {
-			open_timer = 0;
-			start_keycode = 0;
-		}
-	} else if (KC_LBRC == keycode) {
-		open_timer = timer_read();
-		start_keycode = keycode;
-	} else if (KC_RBRC == keycode && KC_LBRC == start_keycode) {
-		if (timer_elapsed(open_timer) < AUTOCLOSE_TERM) {
-			SEND_STRING("]" SS_TAP(X_LEFT));
-			open_timer = 0;
-			start_keycode = 0;
-			return false;
-		} else {
-			open_timer = 0;
-			start_keycode = 0;
-		}
-	} else if (KC_LPRN == keycode) {
-		open_timer = timer_read();
-		start_keycode = keycode;
-	} else if (KC_RPRN == keycode && KC_LPRN == start_keycode) {
-		if (timer_elapsed(open_timer) < AUTOCLOSE_TERM) {
-			SEND_STRING(")" SS_TAP(X_LEFT));
-			open_timer = 0;
-			start_keycode = 0;
-			return false;
-		} else {
-			open_timer = 0;
-			start_keycode = 0;
-		}
-	}
+static bool complete_autoclose(uint16_t expected_opening_keycode) {
+    if (opening_keycode != expected_opening_keycode) {
+        return true;
+    }
 
-	return true;
+    bool within_term = timer_elapsed(autoclose_timer) < AUTOCLOSE_TERM;
+
+    reset_autoclose();
+
+    return !within_term;
+}
+
+bool process_autoclose(uint16_t keycode, keyrecord_t *record) {
+    if (!record->event.pressed) {
+        return true;
+    }
+
+    switch (keycode) {
+        case KC_LCBR:
+        case KC_LBRC:
+        case KC_LPRN:
+            opening_keycode = keycode;
+            autoclose_timer = timer_read();
+            return true;
+
+        case KC_RCBR:
+            if (!complete_autoclose(KC_LCBR)) {
+                SEND_STRING("}" SS_TAP(X_LEFT));
+                return false;
+            }
+            break;
+
+        case KC_RBRC:
+            if (!complete_autoclose(KC_LBRC)) {
+                SEND_STRING("]" SS_TAP(X_LEFT));
+                return false;
+            }
+            break;
+
+        case KC_RPRN:
+            if (!complete_autoclose(KC_LPRN)) {
+                SEND_STRING(")" SS_TAP(X_LEFT));
+                return false;
+            }
+            break;
+    }
+
+    return true;
 }
